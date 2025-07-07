@@ -16,13 +16,9 @@ const root = (_, response) => {
   response.send(`<pre>
   ------------------------------- ROOT PAGE -------------------------------\n
     
-    Imported data: \n
-  PRODUCTS: -----------------------------------
-  \n${JSON.stringify(products, null, 2)}
   USERS: -----------------------------------
   \n${JSON.stringify(users, null, 2)}
-  PURCHASES: -----------------------------------
-  \n${JSON.stringify(purchases, null, 2)}</pre>`);
+  </pre>`);
 };
 // #endregion Root & Repetitive functions -------------------------------
 
@@ -134,7 +130,26 @@ const averageAge = (_, response) => {
   response.status(200).send(`Average Age: ${sum} years`);
 };
 
-const sort = (_, response) => {};
+const sort = (req, response) => {
+  const sortBy = req.body.sortBy;
+  console.info("sortBy:", sortBy);
+  if (sortBy === "age") {
+    const sortByAge = users.toSorted((a, b) => {
+      return a.age - b.age;
+    });
+    console.info(sortByAge);
+    response.send(sortByAge);
+  } else if (sortBy === "name") {
+    const sortByName = users.toSorted((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    console.info(sortByName);
+    response.send(sortByName);
+  } else {
+    response.send("Wrong setting in SortBy !!! Use only 'age' or 'name'.");
+    throw Error("WRONG SETTING in /SORT !!!");
+  }
+};
 
 // Domain = Domain of an E-mail
 const domain = (req, response) => {
