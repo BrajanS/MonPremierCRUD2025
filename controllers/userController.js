@@ -36,15 +36,14 @@ const getUser = (req, response) => {
     const foundUserIndex = findFromArray(params, users);
     if (foundUserIndex) {
       const foundUser = users[foundUserIndex];
-      if (response.statusCode === 200) {
-        if (foundUser) {
-          console.info(foundUser);
-          response.status(200).send(foundUser);
-        }
+      if (foundUser) {
+        console.info(foundUser);
+        response.status(200).send(foundUser);
       }
     }
   } catch (error) {
     console.error(error);
+    response.status(500).send(error);
   }
 };
 
@@ -53,19 +52,18 @@ const postUser = (req, response) => {
     const requestedUser = req.body;
     console.info("POST:", response.statusCode, requestedUser);
     const isDuplicate = users.some((item) => {
-      return JSON.stringify(item) === JSON.stringify(requestedUser);
+      return item.id === requestedUser.id;
     });
     if (!isDuplicate) {
-      if (response.statusCode === 200) {
-        response.status(200);
-        users.push(requestedUser);
-        response.send(users);
-      }
+      response.status(200);
+      users.push(requestedUser);
+      response.send(users);
     } else {
       console.error("THE POST request IS A DUPLICATE !!!!!!!!!!!");
     }
   } catch (error) {
     console.error(error);
+    response.status(500).send(error);
   }
 };
 
@@ -86,6 +84,7 @@ const putUser = (req, response) => {
     }
   } catch (error) {
     console.error(error);
+    response.status(500).send(error);
   }
 };
 
@@ -102,6 +101,7 @@ const deleteUser = (req, response) => {
     }
   } catch (error) {
     console.error(error);
+    response.status(500).send(error);
   }
 };
 // #endregion REGULAR USER CALLBACKS----------
@@ -173,7 +173,7 @@ const sort = (req, response) => {
 const domain = (req, response) => {
   const domainSearch = req.params.domain;
   const wantedDomainUsers = users.filter((user) => {
-    const selectUserDomain = user.email.split("@")[1];
+    const selectUserDomain = user.email.split("@")[1].trim().toLowerCase();
     return selectUserDomain === domainSearch;
   });
   if (wantedDomainUsers !== undefined) {
