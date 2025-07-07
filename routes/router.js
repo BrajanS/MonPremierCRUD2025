@@ -36,7 +36,7 @@ router.delete("/users/:id", deleteUser);
 // USER FILTERS ROUTES
 
 router.get("/youngest", youngestUser);
-// router.get("/search?name", searchByName);  ?name doesn't work, IDK so i skip
+router.get("/search", searchByName);
 router.get("/average-age", averageAge);
 router.get("/domain/:domain", domain);
 

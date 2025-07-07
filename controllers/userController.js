@@ -118,7 +118,22 @@ const youngestUser = (_, response) => {
   response.status(200).send(findYoungest);
 };
 
-const searchByName = (req, response) => {};
+const searchByName = (req, response) => {
+  const name = req.query.name;
+  if (name !== undefined) {
+    console.info(name);
+    const searchUsers = users.filter((user) => {
+      return user.name.toLowerCase().includes(name.toLowerCase());
+    });
+    console.info("searchUsers:", searchUsers);
+    response.send(searchUsers);
+  } else {
+    const errorTxt =
+      "'Name' query is Undefined. Either you didn't call it 'name', or the value is empty";
+    console.error(errorTxt);
+    response.send(errorTxt);
+  }
+};
 
 const averageAge = (_, response) => {
   let ageAddition = 0;
@@ -132,16 +147,19 @@ const averageAge = (_, response) => {
 
 const sort = (req, response) => {
   const sortBy = req.body.sortBy;
+  const reverse = req.body.reverse;
   console.info("sortBy:", sortBy);
   if (sortBy === "age") {
     const sortByAge = users.toSorted((a, b) => {
-      return a.age - b.age;
+      const values = reverse === true ? [b, a] : [a, b];
+      return values[0].age - values[1].age;
     });
     console.info(sortByAge);
     response.send(sortByAge);
   } else if (sortBy === "name") {
     const sortByName = users.toSorted((a, b) => {
-      return a.name.localeCompare(b.name);
+      const values = reverse === true ? [b, a] : [a, b];
+      return values[0].name.localeCompare(values[1].name);
     });
     console.info(sortByName);
     response.send(sortByName);
