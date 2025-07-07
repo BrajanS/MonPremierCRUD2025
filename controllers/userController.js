@@ -134,7 +134,7 @@ const averageAge = (_, response) => {
   response.status(200).send(`Average Age: ${sum} years`);
 };
 
-const sort = (req, response) => {};
+const sort = (_, response) => {};
 
 // Domain = Domain of an E-mail
 const domain = (req, response) => {
