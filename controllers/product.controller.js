@@ -1,5 +1,5 @@
 import products from "../models/products.js";
-import { findFromArray } from "./userController.js";
+import { findFromArray } from "./user.controller.js";
 
 const getProducts = (_, response) => {
   if (response.statusCode === 200) {

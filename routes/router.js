@@ -12,14 +12,15 @@ import {
   searchByName,
   averageAge,
   domain,
-} from "../controllers/userController.js";
+} from "../controllers/user.controller.js";
 import {
   deleteProduct,
   getProduct,
   getProducts,
   postProduct,
   putProduct,
-} from "../controllers/productController.js";
+} from "../controllers/product.controller.js";
+import { purchase, purchases } from "../controllers/purchase.controller.js";
 
 const router = express.Router();
 
@@ -52,6 +53,12 @@ router.post("/products", postProduct);
 router.put("/products/:id", putProduct);
 router.delete("/products/:id", deleteProduct);
 // #endregion PRODUCT ROUTES -------------
+
+// #region PURCHASES ROUTES --------------
+router.get("/purchases", purchases);
+
+router.post("/purchase", purchase);
+// #endregion PURCHASES ROUTES -----------
 
 // Express 5 doc changed from "/*" to -> "/*Any-Name" for Page not found, else it thinks "*" is a PARAMS
 router.get("/*notfound", notFound);

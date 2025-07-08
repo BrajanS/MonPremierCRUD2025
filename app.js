@@ -9,7 +9,6 @@ app.use(express.json());
 app.use("", router);
 
 app.listen(port, (err) => {
-  console.clear();
   console.info(`Server has started at: http://localhost:${port}`);
   if (err) {
     console.error("Couldn't start:", err);

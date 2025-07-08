@@ -1,5 +1,7 @@
 // #region Imports & Root & Repetitive functions ------------------------
 import users from "../models/users.js";
+import products from "../models/products.js";
+import purchasesModel from "../models/purchases.js";
 
 function findFromArray(paramsID, array) {
   if (Array.isArray(array) && typeof paramsID === "number") {
@@ -13,12 +15,25 @@ function findFromArray(paramsID, array) {
 }
 
 const root = (_, response) => {
-  response.send(`<pre>
-  ------------------------------- ROOT PAGE -------------------------------\n
-    
-  USERS: -----------------------------------
-  \n${JSON.stringify(users, null, 2)}
-  </pre>`);
+  response.send(`
+  <header style="width:100%; display:flex; flex-direction:column;">
+    <h1>------------------------------- ROOT PAGE -------------------------------</h1>
+    <div style="display:flex; flex-direction: row; justify-content:space-between;">
+      <pre>
+        USERS: -----------------------------------
+        \n${JSON.stringify(users, null, 2)}
+      </pre>
+      <pre>
+        PRODUCTS: --------------------------------
+        \n${JSON.stringify(products, null, 2)}
+      </pre>
+      <pre>
+        PURCHASES: -------------------------------
+        \n${JSON.stringify(purchasesModel, null, 2)}
+      </pre>
+    </div>
+  </header>
+  `);
 };
 // #endregion Root & Repetitive functions -------------------------------
 

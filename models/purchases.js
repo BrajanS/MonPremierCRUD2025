@@ -1,4 +1,4 @@
-const purchases = [
+const purchasesModel = [
   {
     userId: 1,
     productId: 3,
@@ -16,4 +16,4 @@ const purchases = [
   },
 ];
 
-export default purchases;
+export default purchasesModel;
