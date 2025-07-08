@@ -17,24 +17,10 @@ const purchase = (req, response) => {
   try {
     const userBuys = req.body;
     console.info(purchasesData);
-    const isDuplicate = purchasesData.some((data) => {
-      return (
-        data.userId === userBuys.userId && data.productId === userBuys.productId
-      );
-    });
-    console.info("isDuplicate:", isDuplicate);
-    if (isDuplicate === false) {
-      const currentDate = new Date().toISOString();
-      Object.assign(userBuys, { date: currentDate });
-      purchasesData.push(userBuys);
-      response.status(200).json(userBuys);
-    } else {
-      response
-        .status(400)
-        .send(
-          `The Data you sent already exists... Please retry a different one`
-        );
-    }
+    const currentDate = new Date().toISOString();
+    Object.assign(userBuys, { date: currentDate });
+    purchasesData.push(userBuys);
+    response.status(200).json(userBuys);
   } catch (err) {
     console.error(err);
     throw Error(err);

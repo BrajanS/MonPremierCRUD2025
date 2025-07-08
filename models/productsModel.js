@@ -1,11 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
-const productsStructure = new mongoose.Schema({
-  id: { type: Number },
-  name: { type: String, required: true },
+const ProductsStructure = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
   price: { type: Schema.Types.Decimal128, required: true },
 });
 
-const productsModel = mongoose.model(productsStructure);
+const ProductsModel = mongoose.model("Products", ProductsStructure);
 
-export default productsModel;
+export default ProductsModel;

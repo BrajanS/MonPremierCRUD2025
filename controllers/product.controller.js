@@ -1,14 +1,19 @@
 import products from "../data/products.js";
 import { findFromArray } from "./user.controller.js";
+import ProductsModel from "../models/productsModel.js";
 
-const getProducts = (_, response) => {
-  if (response.statusCode === 200) {
-    console.info(response.statusCode);
+const getProducts = async (_, response) => {
+  try {
+    const dbProduct = await ProductsModel.find({});
+    if (dbProduct) {
+      response.status(200).send(dbProduct);
+    }
+  } catch (err) {
+    response.status(500).json(err);
   }
-  response.status(200).send(products);
 };
 
-const getProduct = (req, response) => {
+const getProduct = async (req, response) => {
   try {
     const params = Number(req.params.id);
     const foundProductIndex = findFromArray(params, products);
@@ -26,7 +31,7 @@ const getProduct = (req, response) => {
   }
 };
 
-const postProduct = (req, response) => {
+const postProduct = async (req, response) => {
   try {
     const requestedProduct = req.body;
     console.info("POST:", response.statusCode, requestedProduct);
@@ -47,7 +52,7 @@ const postProduct = (req, response) => {
   }
 };
 
-const putProduct = (req, response) => {
+const putProduct = async (req, response) => {
   try {
     const reqProductChange = req.body;
     const productReplacement = {};
@@ -68,7 +73,7 @@ const putProduct = (req, response) => {
   }
 };
 
-const deleteProduct = (req, response) => {
+const deleteProduct = async (req, response) => {
   try {
     const deleteParams = Number(req.params.id);
     console.info("deleteIndex:", deleteParams);

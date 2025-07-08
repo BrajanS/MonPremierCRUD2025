@@ -2,6 +2,7 @@
 import users from "../data/users.js";
 import products from "../data/products.js";
 import purchasesData from "../data/purchases.js";
+import UsersModel from "../models/usersModel.js";
 
 function findFromArray(paramsID, array) {
   if (Array.isArray(array) && typeof paramsID === "number") {
@@ -38,81 +39,71 @@ const root = (_, response) => {
 // #endregion Root & Repetitive functions -------------------------------
 
 // #region REGULAR USER CALLBACKS-------------
-const getUsers = (_, response) => {
-  if (response.statusCode === 200) {
-    console.info(response.statusCode);
+const getUsers = async (_, response) => {
+  try {
+    const allUsers = await UsersModel.find({});
+    response.status(200).send(allUsers);
+  } catch (err) {
+    response.status(500).json(err);
   }
-  response.status(200).send(users);
 };
 
-const getUser = (req, response) => {
+const getUser = async (req, response) => {
   try {
-    const params = Number(req.params.id);
-    const foundUserIndex = findFromArray(params, users);
-    if (foundUserIndex) {
-      const foundUser = users[foundUserIndex];
-      if (foundUser) {
-        console.info(foundUser);
-        response.status(200).send(foundUser);
-      }
+    const params = req.params.id;
+    const foundUser = await UsersModel.find({ _id: params });
+    if (foundUser.length !== 0) {
+      console.info(foundUser);
+      response.status(200).json(foundUser);
+    } else {
+      response.status(404).send("Couldn't find the User by that _id");
     }
   } catch (error) {
     console.error(error);
-    response.status(500).send(error);
+    response.status(500).json(error);
   }
 };
 
-const postUser = (req, response) => {
+const postUser = async (req, response) => {
   try {
     const requestedUser = req.body;
-    console.info("POST:", response.statusCode, requestedUser);
-    const isDuplicate = users.some((item) => {
-      return item.id === requestedUser.id;
-    });
-    if (!isDuplicate) {
-      response.status(200);
-      users.push(requestedUser);
-      response.send(users);
-    } else {
-      console.error("THE POST request IS A DUPLICATE !!!!!!!!!!!");
-    }
+    users.push(requestedUser);
+    const newUser = await UsersModel.create(requestedUser);
+    console.info("New user:", newUser);
+    response.status(200).json(newUser);
   } catch (error) {
     console.error(error);
-    response.status(500).send(error);
+    response.status(500).json(error);
   }
 };
 
-const putUser = (req, response) => {
+const putUser = async (req, response) => {
   try {
     const reqUserChange = req.body;
-    const userReplacement = {};
-    const paramsID = Number(req.params.id);
-    console.info("PUT PRE:", users);
-    const userToChangeIndex = findFromArray(paramsID, users);
-    if (userToChangeIndex !== undefined) {
-      userReplacement.id = users[userToChangeIndex].id;
-      Object.assign(userReplacement, reqUserChange);
-      // userReplacement replaces the User in Users with Splice()
-      users.splice(userToChangeIndex, 1, userReplacement);
-      console.info("PUT AFTER:", users);
-      response.status(200).send(users);
+    const paramsID = req.params.id;
+    const userToChange = await UsersModel.findByIdAndUpdate(
+      paramsID,
+      reqUserChange
+    );
+    if (userToChange) {
+      response.status(200).json(userToChange);
     }
   } catch (error) {
     console.error(error);
-    response.status(500).send(error);
+    response.status(500).json(error);
   }
 };
 
-const deleteUser = (req, response) => {
+const deleteUser = async (req, response) => {
   try {
-    const deleteParams = Number(req.params.id);
-    console.info("deleteIndex:", deleteParams);
-    const userIndex = findFromArray(deleteParams, users);
-    if (userIndex !== undefined) {
-      console.info("DELETE PRE:", users);
-      users.splice(userIndex, 1);
-      console.info("DELETE AFTER:", users);
-      response.send(users);
+    const deleteParams = req.params.id;
+    const userToDelete = await UsersModel.findByIdAndDelete(deleteParams);
+    if (userToDelete !== null) {
+      response.status(200).send(`DELETED USER: ${deleteParams}`);
+    } else {
+      response
+        .status(404)
+        .send(`ERROR 404: Couldn't find the User "${deleteParams}".`);
     }
   } catch (error) {
     console.error(error);
@@ -122,15 +113,22 @@ const deleteUser = (req, response) => {
 // #endregion REGULAR USER CALLBACKS----------
 
 // #region ADVANCED USER FILTER CALLBACKS-----
-const youngestUser = (_, response) => {
-  let findYoungest = users.length > 1 ? undefined : users[0];
-  console.info(findYoungest);
-  users.forEach((user) => {
-    if (findYoungest === undefined) findYoungest = user;
-    findYoungest = user.age < findYoungest.age ? user : findYoungest;
-  });
-  console.info("YOUNGEST USER:", findYoungest);
-  response.status(200).send(findYoungest);
+const youngestUser = async (_, response) => {
+  try {
+    let usersArray;
+    const listOfUsers = await UsersModel.find({});
+    if (listOfUsers) {
+      usersArray = listOfUsers;
+    }
+    let findYoungest = usersArray.length > 1 ? undefined : usersArray[0];
+    usersArray.forEach((user) => {
+      if (findYoungest === undefined) findYoungest = user;
+      findYoungest = user.age < findYoungest.age ? user : findYoungest;
+    });
+    response.status(200).send(findYoungest);
+  } catch (err) {
+    response.status(500).json(err);
+  }
 };
 
 const searchByName = (req, response) => {

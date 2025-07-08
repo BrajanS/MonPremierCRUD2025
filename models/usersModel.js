@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
-const usersStructure = new mongoose.Schema({
-  id: { type: Number },
+const UsersStructure = new mongoose.Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
   email: { type: String, required: true, unique: true },
 });
 
-const usersModel = mongoose.model(usersStructure);
+const UsersModel = mongoose.model("Users", UsersStructure);
 
-export default usersModel;
+export default UsersModel;
