@@ -1,3 +1,4 @@
+// #region IMPORTS
 import express from "express";
 import {
   root,
@@ -20,7 +21,13 @@ import {
   postProduct,
   putProduct,
 } from "../controllers/product.controller.js";
-import { purchase, purchases } from "../controllers/purchase.controller.js";
+import {
+  productBuyers,
+  purchase,
+  purchases,
+  userPurchases,
+} from "../controllers/purchase.controller.js";
+// #endregion IMPORTS
 
 const router = express.Router();
 
@@ -56,8 +63,10 @@ router.delete("/products/:id", deleteProduct);
 
 // #region PURCHASES ROUTES --------------
 router.get("/purchases", purchases);
-
 router.post("/purchase", purchase);
+
+router.get("/users/:id/purchases", userPurchases);
+router.get("/products/:id/buyers", productBuyers);
 // #endregion PURCHASES ROUTES -----------
 
 // Express 5 doc changed from "/*" to -> "/*Any-Name" for Page not found, else it thinks "*" is a PARAMS

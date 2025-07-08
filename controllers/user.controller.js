@@ -17,7 +17,7 @@ function findFromArray(paramsID, array) {
 const root = (_, response) => {
   response.send(`
   <header style="width:100%; display:flex; flex-direction:column;">
-    <h1>------------------------------- ROOT PAGE -------------------------------</h1>
+    <h1 style="align-self:center">------------------------------- ROOT PAGE -------------------------------</h1>
     <div style="display:flex; flex-direction: row; justify-content:space-between;">
       <pre>
         USERS: -----------------------------------
