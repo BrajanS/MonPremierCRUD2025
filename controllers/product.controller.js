@@ -1,4 +1,4 @@
-import products from "../models/products.js";
+import products from "../data/products.js";
 import { findFromArray } from "./user.controller.js";
 
 const getProducts = (_, response) => {

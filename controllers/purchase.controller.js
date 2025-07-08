@@ -1,7 +1,15 @@
-import purchasesModel from "../models/purchases.js";
+import purchasesData from "../data/purchases.js";
 
-const purchases = (req, response) => {
-  console.log(purchasesModel);
+const purchases = (_, response) => {
+  try {
+    const allPurchases = purchasesData;
+    if (allPurchases !== undefined) {
+      response.status(200).send(allPurchases);
+    }
+  } catch (err) {
+    console.error(err);
+    throw Error(err);
+  }
 };
 
 const purchase = (req, response) => {};

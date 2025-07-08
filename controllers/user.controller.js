@@ -1,7 +1,7 @@
 // #region Imports & Root & Repetitive functions ------------------------
-import users from "../models/users.js";
-import products from "../models/products.js";
-import purchasesModel from "../models/purchases.js";
+import users from "../data/users.js";
+import products from "../data/products.js";
+import purchasesData from "../data/purchases.js";
 
 function findFromArray(paramsID, array) {
   if (Array.isArray(array) && typeof paramsID === "number") {
@@ -29,7 +29,7 @@ const root = (_, response) => {
       </pre>
       <pre>
         PURCHASES: -------------------------------
-        \n${JSON.stringify(purchasesModel, null, 2)}
+        \n${JSON.stringify(purchasesData, null, 2)}
       </pre>
     </div>
   </header>
