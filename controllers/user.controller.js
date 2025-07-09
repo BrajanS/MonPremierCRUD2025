@@ -1,13 +1,13 @@
 // #region Imports & Root & Repetitive functions ------------------------
-import users from "../data/users.js";
-import products from "../data/products.js";
-import purchasesData from "../data/purchases.js";
+import users from "../sample_data/users.js";
+import products from "../sample_data/products.js";
+import purchasesData from "../sample_data/purchases.js";
 import UsersModel from "../models/usersModel.js";
 
 const root = (_, response) => {
   response.send(`
   <header style="width:100%; display:flex; flex-direction:column;">
-    <h1 style="align-self:center">------------------------------- ROOT PAGE -------------------------------</h1>
+    <h1 style="align-self:center">------------------------------- ROOT PAGE & SAMPLE DATA -------------------------------</h1>
     <div style="display:flex; flex-direction: row; justify-content:space-between;">
       <pre>
         USERS: -----------------------------------

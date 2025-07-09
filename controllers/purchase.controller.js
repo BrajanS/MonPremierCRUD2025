@@ -1,29 +1,34 @@
-import purchasesData from "../data/purchases.js";
+import PurchaseModel from "../models/purchasesModel.js";
 
 // #region Classic purchase Routes ----------
-const purchases = (_, response) => {
+const purchases = async (_, response) => {
   try {
-    const allPurchases = purchasesData;
-    if (allPurchases !== undefined) {
-      response.status(200).send(allPurchases);
+    const allPurchases = await PurchaseModel.find({});
+    if (allPurchases) {
+      response.status(200).json(allPurchases);
+    } else {
+      response
+        .status(404)
+        .send("Something went wrong while finding the Purchases");
     }
   } catch (err) {
     console.error(err);
-    throw Error(err);
+    response.status(500).json(err);
   }
 };
 
-const purchase = (req, response) => {
+const purchase = async (req, response) => {
   try {
     const userBuys = req.body;
-    console.info(purchasesData);
-    const currentDate = new Date().toISOString();
-    Object.assign(userBuys, { date: currentDate });
-    purchasesData.push(userBuys);
-    response.status(200).json(userBuys);
+    const newPurchase = await PurchaseModel.create(userBuys);
+    if (newPurchase) {
+      response.status(200).json(newPurchase);
+    } else {
+      response.status(400).send("ERROR 400: Something went wrong");
+    }
   } catch (err) {
     console.error(err);
-    throw Error(err);
+    response.status(500).json(err);
   }
 };
 // #endregion Classic purchase Routes -------
