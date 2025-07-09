@@ -1,5 +1,3 @@
-import products from "../data/products.js";
-import { findFromArray } from "./user.controller.js";
 import ProductsModel from "../models/productsModel.js";
 
 const getProducts = async (_, response) => {
@@ -15,77 +13,77 @@ const getProducts = async (_, response) => {
 
 const getProduct = async (req, response) => {
   try {
-    const params = Number(req.params.id);
-    const foundProductIndex = findFromArray(params, products);
-    if (foundProductIndex) {
-      const foundProduct = products[foundProductIndex];
-      if (response.statusCode === 200) {
-        if (foundProduct) {
-          console.info(foundProduct);
-          response.status(200).send(foundProduct);
-        }
+    const params = req.params.id;
+    if (params.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const findProduct = await ProductsModel.findOne({ _id: params });
+      if (findProduct) {
+        response.status(200).json(findProduct);
+      } else {
+        response.status(404).send("Couldn't find the Product");
       }
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
   }
 };
 
 const postProduct = async (req, response) => {
   try {
     const requestedProduct = req.body;
-    console.info("POST:", response.statusCode, requestedProduct);
-    const isDuplicate = products.some((item) => {
-      return JSON.stringify(item) === JSON.stringify(requestedProduct);
-    });
-    if (!isDuplicate) {
-      if (response.statusCode === 200) {
-        response.status(200);
-        products.push(requestedProduct);
-        response.send(products);
-      }
-    } else {
-      console.error("THE POST request IS A DUPLICATE !!!!!!!!!!!");
+    console.info("requestedProduct:", requestedProduct);
+    const newProduct = await ProductsModel.create(requestedProduct);
+    if (newProduct) {
+      console.info(newProduct);
+      response.status(200).send(newProduct);
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
   }
 };
 
 const putProduct = async (req, response) => {
   try {
     const reqProductChange = req.body;
-    const productReplacement = {};
-    const paramsID = Number(req.params.id);
-    console.info("PUT PRE:", products);
-    const productToChangeIndex = findFromArray(paramsID, products);
-    if (productToChangeIndex !== undefined) {
-      productReplacement.id = products[productToChangeIndex].id;
-      Object.assign(productReplacement, reqProductChange);
-      // productReplacement replaces the Product in products with Splice()
-      products.splice(productToChangeIndex, 1, productReplacement);
-      response.status(200);
-      console.info("PUT AFTER:", products);
-      response.status(200).send(products);
+    const paramsID = req.params.id;
+    if (paramsID.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const productToChange = await ProductsModel.findByIdAndUpdate(
+        paramsID,
+        reqProductChange
+      );
+      if (productToChange) {
+        response.status(200).json(productToChange);
+      } else {
+        response.status(404).send("Couldn't find the product to Change");
+      }
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
   }
 };
 
 const deleteProduct = async (req, response) => {
   try {
-    const deleteParams = Number(req.params.id);
-    console.info("deleteIndex:", deleteParams);
-    const productIndex = findFromArray(deleteParams, products);
-    if (productIndex !== undefined) {
-      console.info("DELETE PRE:", products);
-      products.splice(productIndex, 1);
-      console.info("DELETE AFTER:", products);
-      response.send(products);
+    const deleteParams = req.params.id;
+    if (deleteParams.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const deleteProduct = await ProductsModel.findByIdAndDelete(deleteParams);
+      if (deleteProduct) {
+        response.status(200).json(deleteProduct);
+      } else {
+        response.status(404).send("Couldn't find the Product to Delete");
+      }
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
   }
 };
 

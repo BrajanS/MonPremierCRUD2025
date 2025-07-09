@@ -4,17 +4,6 @@ import products from "../data/products.js";
 import purchasesData from "../data/purchases.js";
 import UsersModel from "../models/usersModel.js";
 
-function findFromArray(paramsID, array) {
-  if (Array.isArray(array) && typeof paramsID === "number") {
-    const objectIndexArray = array.findIndex((item) => {
-      return item.id === paramsID;
-    });
-    if (objectIndexArray !== undefined) {
-      return objectIndexArray;
-    }
-  }
-}
-
 const root = (_, response) => {
   response.send(`
   <header style="width:100%; display:flex; flex-direction:column;">
@@ -51,12 +40,15 @@ const getUsers = async (_, response) => {
 const getUser = async (req, response) => {
   try {
     const params = req.params.id;
-    const foundUser = await UsersModel.find({ _id: params });
-    if (foundUser.length !== 0) {
-      console.info(foundUser);
-      response.status(200).json(foundUser);
+    if (params.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
     } else {
-      response.status(404).send("Couldn't find the User by that _id");
+      const foundUser = await UsersModel.find({ _id: params });
+      if (foundUser.length !== 0) {
+        response.status(200).json(foundUser);
+      } else {
+        response.status(404).send("Couldn't find the User by that _id");
+      }
     }
   } catch (error) {
     console.error(error);
@@ -81,12 +73,18 @@ const putUser = async (req, response) => {
   try {
     const reqUserChange = req.body;
     const paramsID = req.params.id;
-    const userToChange = await UsersModel.findByIdAndUpdate(
-      paramsID,
-      reqUserChange
-    );
-    if (userToChange) {
-      response.status(200).json(userToChange);
+    if (paramsID.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const userToChange = await UsersModel.findByIdAndUpdate(
+        paramsID,
+        reqUserChange
+      );
+      if (userToChange) {
+        response.status(200).json(userToChange);
+      } else {
+        response.status(404).send("Couldn't find the User to change");
+      }
     }
   } catch (error) {
     console.error(error);
@@ -97,13 +95,17 @@ const putUser = async (req, response) => {
 const deleteUser = async (req, response) => {
   try {
     const deleteParams = req.params.id;
-    const userToDelete = await UsersModel.findByIdAndDelete(deleteParams);
-    if (userToDelete !== null) {
-      response.status(200).send(`DELETED USER: ${deleteParams}`);
+    if (deleteParams.toLowerCase().split("").length < 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
     } else {
-      response
-        .status(404)
-        .send(`ERROR 404: Couldn't find the User "${deleteParams}".`);
+      const userToDelete = await UsersModel.findByIdAndDelete(deleteParams);
+      if (userToDelete !== null) {
+        response.status(200).send(`DELETED USER: ${deleteParams}`);
+      } else {
+        response
+          .status(404)
+          .send(`ERROR 404: Couldn't find the User "${deleteParams}".`);
+      }
     }
   } catch (error) {
     console.error(error);
@@ -218,7 +220,6 @@ const notFound = (req, response) => {
 };
 
 export {
-  findFromArray,
   root,
   notFound,
   getUsers,
