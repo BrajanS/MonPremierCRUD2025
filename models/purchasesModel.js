@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const PurchasesStructure = new mongoose.Schema({
-  userId: { type: Number, required: true },
-  productId: { type: Number, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  productId: { type: mongoose.Schema.Types.ObjectId, required: true },
   date: { type: Date, default: new Date().toISOString() },
 });
 
