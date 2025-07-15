@@ -13,20 +13,20 @@ import {
   searchByName,
   averageAge,
   domain,
-} from "../controllers/user.controller.js";
+} from "../core/users/user.controller.js";
 import {
   deleteProduct,
   getProduct,
   getProducts,
   postProduct,
   putProduct,
-} from "../controllers/product.controller.js";
+} from "../core/products/product.controller.js";
 import {
   productBuyers,
   purchase,
   purchases,
   userPurchases,
-} from "../controllers/purchase.controller.js";
+} from "../core/purchases/purchase.controller.js";
 // #endregion IMPORTS
 
 const router = express.Router();

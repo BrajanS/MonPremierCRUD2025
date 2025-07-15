@@ -1,5 +1,5 @@
-import PurchasesModel from "../models/purchasesModel.js";
-import ProductsModel from "../models/productsModel.js";
+import PurchasesModel from "./repository/purchasesModel.js";
+import ProductsModel from "../products/repository/productsModel.js";
 
 // #region Classic purchase Routes ----------
 const purchases = async (_, response) => {

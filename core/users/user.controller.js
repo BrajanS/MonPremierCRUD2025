@@ -1,8 +1,8 @@
 // #region Imports & Root & Repetitive functions ------------------------
-import users from "../sample_data/users.js";
-import products from "../sample_data/products.js";
-import purchasesData from "../sample_data/purchases.js";
-import UsersModel from "../models/usersModel.js";
+import users from "../../sample_data/users.js";
+import products from "../../sample_data/products.js";
+import purchasesData from "../../sample_data/purchases.js";
+import UsersModel from "./repository/usersModel.js";
 
 const root = (_, response) => {
   response.send(`
