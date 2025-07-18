@@ -2,15 +2,32 @@
 import users from "../../sample_data/users.js";
 import products from "../../sample_data/products.js";
 import purchasesData from "../../sample_data/purchases.js";
-import UsersModel from "./repository/usersModel.js";
 import {
   usersService,
   targetUser,
   updateUserService,
   postUserService,
   deleteUserService,
+  youngestUserService,
 } from "./user.service.js";
+/**
+ * @module userController
+ * All the Controllers that verify each User routes
+ */
 
+/**
+ * @typedef {import("express").Request} Req -> Request from Express
+ * @typedef {import("express").Response} Res -> Request from Express
+ * @typedef {Promise<void>} Pvoid -> Promise without Returns to Caller
+ * @typedef {import("express").Request} ignoredReq -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {import("express").Response} ignoredRes -> Ignored ("_" -> Not used) Response from Express
+ */
+
+/**
+ * @param {ignoredReq}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const root = (_, response) => {
   response.send(`
   <header style="width:100%; display:flex; flex-direction:column;">
@@ -35,6 +52,11 @@ const root = (_, response) => {
 // #endregion Root & Repetitive functions -------------------------------
 
 // #region REGULAR USER CALLBACKS-------------
+/**
+ * @param {ignoredReq}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const getUsers = async (_, response) => {
   try {
     const allUsers = await usersService();
@@ -43,7 +65,11 @@ const getUsers = async (_, response) => {
     response.status(500).json(err);
   }
 };
-
+/**
+ * @param {Req}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const getUser = async (req, response) => {
   try {
     const params = req.params.id;
@@ -58,7 +84,11 @@ const getUser = async (req, response) => {
     response.status(500).json(error);
   }
 };
-
+/**
+ * @param {Req}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const postUser = async (req, response) => {
   try {
     const requestedUser = req.body;
@@ -70,7 +100,11 @@ const postUser = async (req, response) => {
     response.status(500).json(error);
   }
 };
-
+/**
+ * @param {Req}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const putUser = async (req, response) => {
   try {
     const reqUserChange = req.body;
@@ -90,7 +124,11 @@ const putUser = async (req, response) => {
     response.status(500).json(error);
   }
 };
-
+/**
+ * @param {Req}
+ * @param {Res}
+ * @returns {Pvoid}
+ */
 const deleteUser = async (req, response) => {
   try {
     const deleteParams = req.params.id;
@@ -117,7 +155,7 @@ const deleteUser = async (req, response) => {
 const youngestUser = async (_, response) => {
   try {
     let usersArray;
-    const listOfUsers = await UsersModel.find({});
+    const listOfUsers = await youngestUserService();
     if (listOfUsers) {
       usersArray = listOfUsers;
     }

@@ -56,7 +56,11 @@ const userPurchases = async (req, response) => {
   }
 };
 
-const productBuyers = (req, response) => {};
+const productBuyers = (_, response) => {
+  response
+    .status(500)
+    .send("This route wasn't finished ..., and Will NEVER be.");
+};
 // #endregion -------------------------------
 
 export { purchases, purchase, userPurchases, productBuyers };

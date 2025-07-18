@@ -1,5 +1,6 @@
 import UserRepository from "./repository/user.repository.js";
 
+// #region CLASSIC
 const usersService = async () => {
   return await new UserRepository().getUsers();
 };
@@ -19,6 +20,12 @@ const updateUserService = async (id, updateData) => {
 const deleteUserService = async (deleteId) => {
   return await new UserRepository().begoneUser(deleteId);
 };
+// #endregion CLASSIC
+// #region FILTERS
+const youngestUserService = async () => {
+  return await new UserRepository().kidUser();
+};
+// #endregion FILTERS
 
 export {
   usersService,
@@ -26,4 +33,5 @@ export {
   postUserService,
   updateUserService,
   deleteUserService,
+  youngestUserService,
 };

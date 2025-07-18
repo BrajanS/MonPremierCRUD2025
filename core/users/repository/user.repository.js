@@ -1,6 +1,7 @@
 import UsersModel from "./usersModel.js";
 
 export default class UserRepository {
+  // #region CLASSIC ---------------
   async getUsers() {
     try {
       const usersArray = await UsersModel.find();
@@ -38,4 +39,10 @@ export default class UserRepository {
   async begoneUser(erasedUser) {
     return await UsersModel.findByIdAndDelete(erasedUser);
   }
+  // #endregion CLASSIC ------------
+  // #region FILTERS ---------------
+  async kidUser() {
+    return await UsersModel.find({});
+  }
+  // #endregion FILTERS ------------
 }
