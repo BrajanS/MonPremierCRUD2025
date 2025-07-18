@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/purchases/purchase.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/purchases/purchase.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import PurchasesModel from "./repository/purchasesModel.js";
+import ProductsModel from "../products/repository/productsModel.js";
+
+/**
+ * @module purchasesController
+ * : All the Controllers that verify each Purchases routes
+ */
+
+/**
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise&lt;void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
+ */
+
+// #region Classic purchase Routes ----------
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const purchases = async (_, response) => {
+  try {
+    const allPurchases = await PurchasesModel.find({});
+    if (allPurchases) {
+      response.status(200).json(allPurchases);
+    } else {
+      response
+        .status(404)
+        .send("Something went wrong while finding the Purchases");
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const purchase = async (req, response) => {
+  try {
+    const userBuys = req.body;
+    const newPurchase = await PurchasesModel.create(userBuys);
+    if (newPurchase) {
+      response.status(200).json(newPurchase);
+    } else {
+      response.status(400).send("ERROR 400: Something went wrong");
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+// #endregion Classic purchase Routes -------
+
+// #region Find specific Target from Purchase
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const userPurchases = async (req, response) => {
+  try {
+    const idUser = req.params.id;
+    const allUserPurchases = await PurchasesModel.find({ userId: idUser });
+    const arrayProducts = allUserPurchases.map((prod) => {
+      return JSON.stringify(prod.productId).split(`"`)[1];
+    });
+    const findBoughtProducts = await Promise.all(
+      arrayProducts.map(async (productId) => {
+        return await ProductsModel.findById(productId);
+      })
+    );
+    if (findBoughtProducts) {
+      response.status(200).send(findBoughtProducts);
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const productBuyers = (_, response) => {
+  response
+    .status(500)
+    .send("This route wasn't finished ..., and Will NEVER be.");
+};
+// #endregion -------------------------------
+
+export { purchases, purchase, userPurchases, productBuyers };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="UserRepository%250D_%2520Class%2520for%2520User%2520manipulationsmodule_.html">UserRepository: Class for User manipulations</a></li><li><a href="productsController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Products%2520routesmodule_.html">productsController: All the Controllers that verify each Products routes</a></li><li><a href="productsModel%250D_%2520Mongoose%2520wanted%2520Products%2520modelmodule_.html">productsModel: Mongoose wanted Products model</a></li><li><a href="purchasesController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Purchases%2520routesmodule_.html">purchasesController: All the Controllers that verify each Purchases routes</a></li><li><a href="purchasesModel%250D_%2520Mongoose%2520wanted%2520Purchases%2520modelmodule_.html">purchasesModel: Mongoose wanted Purchases model</a></li><li><a href="router%250D_%2520This%2520place%2520Handles%2520all%2520Routes%2520for%2520all%2520Controllersmodule_.html">router: This place Handles all Routes for all Controllers</a></li><li><a href="userController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520User%2520routesmodule_.html">userController: All the Controllers that verify each User routes</a></li><li><a href="usersModel%250D_%2520Mongoose%2520wanted%2520Users%2520modelmodule_.html">usersModel: Mongoose wanted Users model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteUserService">deleteUserService</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#postUserService">postUserService</a></li><li><a href="global.html#targetUser">targetUser</a></li><li><a href="global.html#updateUserService">updateUserService</a></li><li><a href="global.html#usersService">usersService</a></li><li><a href="global.html#youngestUserService">youngestUserService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jul 18 2025 16:58:18 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -29,6 +29,11 @@ import {
 } from "../core/purchases/purchase.controller.js";
 // #endregion IMPORTS
 
+/**
+ * @module router
+ * : This place Handles all Routes for all Controllers
+ */
+
 const router = express.Router();
 
 router.get("/", root);

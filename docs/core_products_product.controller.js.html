@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/products/product.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/products/product.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import ProductsModel from "./repository/productsModel.js";
+
+/**
+ * @module productsController
+ * : All the Controllers that verify each Products routes
+ */
+
+/**
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise&lt;void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
+ */
+
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const getProducts = async (_, response) => {
+  try {
+    const dbProduct = await ProductsModel.find({});
+    if (dbProduct) {
+      response.status(200).send(dbProduct);
+    }
+  } catch (err) {
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const getProduct = async (req, response) => {
+  try {
+    const params = req.params.id;
+    if (params.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const findProduct = await ProductsModel.findOne({ _id: params });
+      if (findProduct) {
+        response.status(200).json(findProduct);
+      } else {
+        response.status(404).send("Couldn't find the Product");
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const postProduct = async (req, response) => {
+  try {
+    const requestedProduct = req.body;
+    console.info("requestedProduct:", requestedProduct);
+    const newProduct = await ProductsModel.create(requestedProduct);
+    if (newProduct) {
+      console.info(newProduct);
+      response.status(200).send(newProduct);
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const putProduct = async (req, response) => {
+  try {
+    const reqProductChange = req.body;
+    const paramsID = req.params.id;
+    if (paramsID.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const productToChange = await ProductsModel.findByIdAndUpdate(
+        paramsID,
+        reqProductChange
+      );
+      if (productToChange) {
+        response.status(200).json(productToChange);
+      } else {
+        response.status(404).send("Couldn't find the product to Change");
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const deleteProduct = async (req, response) => {
+  try {
+    const deleteParams = req.params.id;
+    if (deleteParams.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const deleteProduct = await ProductsModel.findByIdAndDelete(deleteParams);
+      if (deleteProduct) {
+        response.status(200).json(deleteProduct);
+      } else {
+        response.status(404).send("Couldn't find the Product to Delete");
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    response.status(500).json(err);
+  }
+};
+
+export { getProducts, getProduct, postProduct, putProduct, deleteProduct };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="UserRepository%250D_%2520Class%2520for%2520User%2520manipulationsmodule_.html">UserRepository: Class for User manipulations</a></li><li><a href="productsController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Products%2520routesmodule_.html">productsController: All the Controllers that verify each Products routes</a></li><li><a href="productsModel%250D_%2520Mongoose%2520wanted%2520Products%2520modelmodule_.html">productsModel: Mongoose wanted Products model</a></li><li><a href="purchasesController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Purchases%2520routesmodule_.html">purchasesController: All the Controllers that verify each Purchases routes</a></li><li><a href="purchasesModel%250D_%2520Mongoose%2520wanted%2520Purchases%2520modelmodule_.html">purchasesModel: Mongoose wanted Purchases model</a></li><li><a href="router%250D_%2520This%2520place%2520Handles%2520all%2520Routes%2520for%2520all%2520Controllersmodule_.html">router: This place Handles all Routes for all Controllers</a></li><li><a href="userController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520User%2520routesmodule_.html">userController: All the Controllers that verify each User routes</a></li><li><a href="usersModel%250D_%2520Mongoose%2520wanted%2520Users%2520modelmodule_.html">usersModel: Mongoose wanted Users model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteUserService">deleteUserService</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#postUserService">postUserService</a></li><li><a href="global.html#targetUser">targetUser</a></li><li><a href="global.html#updateUserService">updateUserService</a></li><li><a href="global.html#usersService">usersService</a></li><li><a href="global.html#youngestUserService">youngestUserService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jul 18 2025 16:58:18 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

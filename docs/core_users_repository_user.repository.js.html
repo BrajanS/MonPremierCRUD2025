@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/users/repository/user.repository.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/users/repository/user.repository.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import UsersModel from "./usersModel.js";
+
+/**
+ * - Repository Class for User
+ * @class
+ *
+ * @typedef {Promise&lt;Array&lt;Object>>} POA - A promise about an array of objects (Promise&lt;Array&lt;Object>>)
+ * @typedef {Promise&lt;Object|null>} POn - A promise of an Object of the User or Null (Promise&lt;Object|null>)
+ * @typedef {Promise&lt;Object>} PO - A promise of an Object (Promise&lt;Object>)
+ *
+ * @module UserRepository
+ * : Class for User manipulations
+ *
+ */
+export default class UserRepository {
+  // #region CLASSIC ---------------
+  /**
+   * Get all Users
+   * @returns {POA} A promise about an array of User objects.
+   * @throws {Error} Error handling
+   */
+  async getUsers() {
+    try {
+      const usersArray = await UsersModel.find();
+      return usersArray;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  /**
+   * Get User by ID
+   * @param {string} paramsID - ObjectId of the User
+   * @returns {POA} A promise about an Array that has a User object
+   * @throws {Error} Error handling
+   */
+  async user(paramsID) {
+    try {
+      const foundUser = await UsersModel.find({ _id: paramsID });
+      if (foundUser.length !== 0) {
+        console.info("Found the User");
+        return foundUser;
+      } else {
+        console.error("Couldn't find the User by that _id");
+      }
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  /**
+   * Create User with Requested JSON body
+   * @param {Object} jsonBody - User data
+   * @returns {PO} A promise of an Object of the Created User
+   */
+  async makeUser(jsonBody) {
+    return await UsersModel.create(jsonBody);
+  }
+
+  /**
+   * Updates User by ID
+   * @param {string} id - ObjectId of User to change
+   * @param {Object} data - Update data
+   * @returns {POn} A promise of an Object of the User or Null
+   */
+  async updateById(id, data) {
+    return await UsersModel.findByIdAndUpdate(id, data, {
+      runValidators: true,
+      new: true,
+    });
+  }
+
+  /**
+   * Delete user by ID
+   * @param {string} erasedUser - ObjectId of User to delete
+   * @returns {POn} A promise of an Object of the User or Null
+   */
+  async begoneUser(erasedUser) {
+    return await UsersModel.findByIdAndDelete(erasedUser);
+  }
+
+  // #endregion CLASSIC ------------
+
+  // #region FILTERS ---------------
+  /**
+   * Gets ALL users, to start finding the youngest User in the Controller
+   * @returns {POA} A promise of an Array that contains Objects (Users)
+   */
+  async kidUser() {
+    return await UsersModel.find({});
+  }
+  // #endregion FILTERS ------------
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="UserRepository%250D_%2520Class%2520for%2520User%2520manipulationsmodule_.html">UserRepository: Class for User manipulations</a></li><li><a href="productsController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Products%2520routesmodule_.html">productsController: All the Controllers that verify each Products routes</a></li><li><a href="productsModel%250D_%2520Mongoose%2520wanted%2520Products%2520modelmodule_.html">productsModel: Mongoose wanted Products model</a></li><li><a href="purchasesController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Purchases%2520routesmodule_.html">purchasesController: All the Controllers that verify each Purchases routes</a></li><li><a href="purchasesModel%250D_%2520Mongoose%2520wanted%2520Purchases%2520modelmodule_.html">purchasesModel: Mongoose wanted Purchases model</a></li><li><a href="router%250D_%2520This%2520place%2520Handles%2520all%2520Routes%2520for%2520all%2520Controllersmodule_.html">router: This place Handles all Routes for all Controllers</a></li><li><a href="userController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520User%2520routesmodule_.html">userController: All the Controllers that verify each User routes</a></li><li><a href="usersModel%250D_%2520Mongoose%2520wanted%2520Users%2520modelmodule_.html">usersModel: Mongoose wanted Users model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteUserService">deleteUserService</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#postUserService">postUserService</a></li><li><a href="global.html#targetUser">targetUser</a></li><li><a href="global.html#updateUserService">updateUserService</a></li><li><a href="global.html#usersService">usersService</a></li><li><a href="global.html#youngestUserService">youngestUserService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jul 18 2025 16:58:18 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

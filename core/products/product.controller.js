@@ -1,5 +1,28 @@
 import ProductsModel from "./repository/productsModel.js";
 
+/**
+ * @module productsController
+ * : All the Controllers that verify each Products routes
+ */
+
+/**
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise<void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
+ */
+
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const getProducts = async (_, response) => {
   try {
     const dbProduct = await ProductsModel.find({});
@@ -11,6 +34,11 @@ const getProducts = async (_, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const getProduct = async (req, response) => {
   try {
     const params = req.params.id;
@@ -30,6 +58,11 @@ const getProduct = async (req, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const postProduct = async (req, response) => {
   try {
     const requestedProduct = req.body;
@@ -45,6 +78,11 @@ const postProduct = async (req, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const putProduct = async (req, response) => {
   try {
     const reqProductChange = req.body;
@@ -68,6 +106,11 @@ const putProduct = async (req, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const deleteProduct = async (req, response) => {
   try {
     const deleteParams = req.params.id;

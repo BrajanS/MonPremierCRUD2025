@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/users/user.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/users/user.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// #region Imports &amp; Root &amp; Repetitive functions ------------------------
+import users from "../../sample_data/users.js";
+import products from "../../sample_data/products.js";
+import purchasesData from "../../sample_data/purchases.js";
+import {
+  usersService,
+  targetUser,
+  updateUserService,
+  postUserService,
+  deleteUserService,
+  youngestUserService,
+} from "./user.service.js";
+/**
+ * @module userController
+ * : All the Controllers that verify each User routes
+ */
+
+/**
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise&lt;void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
+ */
+
+/**
+ * The Welcome page, display "sample_data" JSON's
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const root = (_, response) => {
+  response.send(`
+  &lt;header style="width:100%; display:flex; flex-direction:column;">
+    &lt;h1 style="align-self:center">------------------------------- ROOT PAGE &amp; SAMPLE DATA -------------------------------&lt;/h1>
+    &lt;div style="display:flex; flex-direction: row; justify-content:space-between;">
+      &lt;pre>
+        USERS: -----------------------------------
+        \n${JSON.stringify(users, null, 2)}
+      &lt;/pre>
+      &lt;pre>
+        PRODUCTS: --------------------------------
+        \n${JSON.stringify(products, null, 2)}
+      &lt;/pre>
+      &lt;pre>
+        PURCHASES: -------------------------------
+        \n${JSON.stringify(purchasesData, null, 2)}
+      &lt;/pre>
+    &lt;/div>
+  &lt;/header>
+  `);
+};
+// #endregion Root &amp; Repetitive functions -------------------------------
+
+// #region REGULAR USER CALLBACKS-------------
+/**
+ * Controller getting all Users
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const getUsers = async (_, response) => {
+  try {
+    const allUsers = await usersService();
+    response.status(200).send(allUsers);
+  } catch (err) {
+    response.status(500).json(err);
+  }
+};
+/**
+ * Controller for getting 1 User, by ObjectId
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const getUser = async (req, response) => {
+  try {
+    const params = req.params.id;
+    if (params.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const foundUser = await targetUser(params);
+      response.status(200).json(foundUser);
+    }
+  } catch (error) {
+    console.error(error);
+    response.status(500).json(error);
+  }
+};
+/**
+ * Controller to Create a new User
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const postUser = async (req, response) => {
+  try {
+    const requestedUser = req.body;
+    const newUser = await postUserService(requestedUser);
+    console.info("New user:", newUser);
+    response.status(200).json(newUser);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json(error);
+  }
+};
+/**
+ * Controller to Update the ObjectId's User
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const putUser = async (req, response) => {
+  try {
+    const reqUserChange = req.body;
+    const paramsID = req.params.id;
+    if (paramsID.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const userToChange = await updateUserService(paramsID, reqUserChange);
+      if (userToChange) {
+        response.status(200).json(userToChange);
+      } else {
+        response.status(404).send("Couldn't find the User to change");
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    response.status(500).json(error);
+  }
+};
+/**
+ * Controller to Delete the ObjectId's User from MongoDb
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const deleteUser = async (req, response) => {
+  try {
+    const deleteParams = req.params.id;
+    if (deleteParams.toLowerCase().split("").length &lt; 24) {
+      response.status(400).send("The ID must be a Hex string of 24 characters");
+    } else {
+      const userToDelete = await deleteUserService(deleteParams);
+      if (userToDelete !== null) {
+        response.status(200).send(`DELETED USER: ${deleteParams}`);
+      } else {
+        response
+          .status(404)
+          .send(`ERROR 404: Couldn't find the User "${deleteParams}".`);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    response.status(500).send(error);
+  }
+};
+// #endregion REGULAR USER CALLBACKS----------
+
+// #region ADVANCED USER FILTER CALLBACKS-----
+/**
+ * Controller to find the Youngest User of the bunch
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const youngestUser = async (_, response) => {
+  try {
+    let usersArray;
+    const listOfUsers = await youngestUserService();
+    if (listOfUsers) {
+      usersArray = listOfUsers;
+    }
+    let findYoungest = usersArray.length > 1 ? undefined : usersArray[0];
+    usersArray.forEach((user) => {
+      if (findYoungest === undefined) findYoungest = user;
+      findYoungest = user.age &lt; findYoungest.age ? user : findYoungest;
+    });
+    response.status(200).send(findYoungest);
+  } catch (err) {
+    response.status(500).json(err);
+  }
+};
+
+/**
+ * Controller to search a User's name with the URL Query
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const searchByName = (req, response) => {
+  const name = req.query.name;
+  if (name !== undefined) {
+    console.info(name);
+    const searchUsers = users.filter((user) => {
+      return user.name.toLowerCase().includes(name.toLowerCase());
+    });
+    console.info("searchUsers:", searchUsers);
+    response.send(searchUsers);
+  } else {
+    const errorTxt =
+      "'Name' query is Undefined. Either you didn't call it 'name', or the value is empty";
+    console.error(errorTxt);
+    response.send(errorTxt);
+  }
+};
+
+/**
+ * Controller to find the Average age between all Users
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const averageAge = (_, response) => {
+  let ageAddition = 0;
+  users.forEach((user) => {
+    ageAddition += user.age;
+  });
+  const sum = Math.round(ageAddition / users.length);
+  console.info("Average Age:", sum);
+  response.status(200).send(`Average Age: ${sum} years`);
+};
+
+/**
+ * Controller to Sort Users by Age or Name (in ASC or DESC)
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
+const sort = (req, response) => {
+  const sortBy = req.body.sortBy;
+  const reverse = req.body.reverse;
+  console.info("sortBy:", sortBy);
+  if (sortBy === "age") {
+    const sortByAge = users.toSorted((a, b) => {
+      const values = reverse === true ? [b, a] : [a, b];
+      return values[0].age - values[1].age;
+    });
+    console.info(sortByAge);
+    response.send(sortByAge);
+  } else if (sortBy === "name") {
+    const sortByName = users.toSorted((a, b) => {
+      const values = reverse === true ? [b, a] : [a, b];
+      return values[0].name.localeCompare(values[1].name);
+    });
+    console.info(sortByName);
+    response.send(sortByName);
+  } else {
+    response.send("Wrong setting in SortBy !!! Use only 'age' or 'name'.");
+    throw Error("WRONG SETTING in /SORT !!!");
+  }
+};
+
+/**
+ * Controller to find all Users who's E-mail domain correspond to the Query
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing Domain = Domain of an E-mail
+ */
+const domain = (req, response) => {
+  const domainSearch = req.params.domain;
+  const wantedDomainUsers = users.filter((user) => {
+    const selectUserDomain = user.email.split("@")[1].trim().toLowerCase();
+    return selectUserDomain === domainSearch;
+  });
+  if (wantedDomainUsers !== undefined) {
+    console.info(wantedDomainUsers);
+    if (wantedDomainUsers.length === 0) {
+      response
+        .status(404)
+        .send(
+          "This domain doesn't exist. Please look at the list of Users again..."
+        );
+    } else {
+      response.status(200).send(wantedDomainUsers);
+    }
+  }
+};
+
+// #endregion ADVANCED USER FILTER CALLBACKS--
+
+// #region NOT EXISTING PAGES &amp; EXPORTS --------------------------------------
+/**
+ * Error Message if the Route doesn't exist (the Opposite of the welcome page)
+ * @param {Req} - Request from Express by POSTMAN (Rest API) - Gets the URL for the Error message
+ * @param {Res} - Response to the Express Server or POSTMAN - Shows the Error message, of Page not found
+ * @returns {Pvoid} - Returns Nothing
+ * Handles the Error message when the Route doesn't exist
+ */
+const notFound = (req, response) => {
+  const statusCode = 404;
+  response.status(statusCode).send(
+    `&lt;h2 style="color:red;">ERROR ${statusCode}:&lt;/h2>
+    &lt;span style="font-family: calibri, sans-serif;">
+       The route &lt;strong style="font-size:20px">${req.url}&lt;/strong> doesn't exist
+    &lt;/span>
+    &lt;a href="./">Go to Root&lt;/a>`
+  );
+};
+
+export {
+  root,
+  notFound,
+  getUsers,
+  getUser,
+  postUser,
+  putUser,
+  deleteUser,
+  youngestUser,
+  searchByName,
+  averageAge,
+  sort,
+  domain,
+};
+// #endregion
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="UserRepository%250D_%2520Class%2520for%2520User%2520manipulationsmodule_.html">UserRepository: Class for User manipulations</a></li><li><a href="productsController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Products%2520routesmodule_.html">productsController: All the Controllers that verify each Products routes</a></li><li><a href="productsModel%250D_%2520Mongoose%2520wanted%2520Products%2520modelmodule_.html">productsModel: Mongoose wanted Products model</a></li><li><a href="purchasesController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Purchases%2520routesmodule_.html">purchasesController: All the Controllers that verify each Purchases routes</a></li><li><a href="purchasesModel%250D_%2520Mongoose%2520wanted%2520Purchases%2520modelmodule_.html">purchasesModel: Mongoose wanted Purchases model</a></li><li><a href="router%250D_%2520This%2520place%2520Handles%2520all%2520Routes%2520for%2520all%2520Controllersmodule_.html">router: This place Handles all Routes for all Controllers</a></li><li><a href="userController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520User%2520routesmodule_.html">userController: All the Controllers that verify each User routes</a></li><li><a href="usersModel%250D_%2520Mongoose%2520wanted%2520Users%2520modelmodule_.html">usersModel: Mongoose wanted Users model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteUserService">deleteUserService</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#postUserService">postUserService</a></li><li><a href="global.html#targetUser">targetUser</a></li><li><a href="global.html#updateUserService">updateUserService</a></li><li><a href="global.html#usersService">usersService</a></li><li><a href="global.html#youngestUserService">youngestUserService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jul 18 2025 16:58:18 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

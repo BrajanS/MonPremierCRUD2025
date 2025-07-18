@@ -1,5 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
+/**
+ * @module productsModel
+ * : Mongoose wanted Products model
+ */
 const ProductsStructure = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   price: { type: Schema.Types.Decimal128, required: true },

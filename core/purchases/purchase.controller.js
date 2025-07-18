@@ -1,7 +1,30 @@
 import PurchasesModel from "./repository/purchasesModel.js";
 import ProductsModel from "../products/repository/productsModel.js";
 
+/**
+ * @module purchasesController
+ * : All the Controllers that verify each Purchases routes
+ */
+
+/**
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise<void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
+ */
+
 // #region Classic purchase Routes ----------
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const purchases = async (_, response) => {
   try {
     const allPurchases = await PurchasesModel.find({});
@@ -18,6 +41,11 @@ const purchases = async (_, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const purchase = async (req, response) => {
   try {
     const userBuys = req.body;
@@ -35,6 +63,12 @@ const purchase = async (req, response) => {
 // #endregion Classic purchase Routes -------
 
 // #region Find specific Target from Purchase
+
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const userPurchases = async (req, response) => {
   try {
     const idUser = req.params.id;
@@ -56,6 +90,11 @@ const userPurchases = async (req, response) => {
   }
 };
 
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const productBuyers = (_, response) => {
   response
     .status(500)

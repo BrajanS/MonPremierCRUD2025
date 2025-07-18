@@ -29,6 +29,7 @@ import {
  */
 
 /**
+ * The Welcome page, display "sample_data" JSON's
  * @param {ignoredReq} - Useless Request from Express, not Used so ignored
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -58,6 +59,7 @@ const root = (_, response) => {
 
 // #region REGULAR USER CALLBACKS-------------
 /**
+ * Controller getting all Users
  * @param {ignoredReq} - Useless Request from Express, not Used so ignored
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -71,6 +73,7 @@ const getUsers = async (_, response) => {
   }
 };
 /**
+ * Controller for getting 1 User, by ObjectId
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -90,6 +93,7 @@ const getUser = async (req, response) => {
   }
 };
 /**
+ * Controller to Create a new User
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -106,6 +110,7 @@ const postUser = async (req, response) => {
   }
 };
 /**
+ * Controller to Update the ObjectId's User
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -130,6 +135,7 @@ const putUser = async (req, response) => {
   }
 };
 /**
+ * Controller to Delete the ObjectId's User from MongoDb
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -158,6 +164,7 @@ const deleteUser = async (req, response) => {
 
 // #region ADVANCED USER FILTER CALLBACKS-----
 /**
+ * Controller to find the Youngest User of the bunch
  * @param {ignoredReq} - Useless Request from Express, not Used so ignored
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -181,6 +188,7 @@ const youngestUser = async (_, response) => {
 };
 
 /**
+ * Controller to search a User's name with the URL Query
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -203,6 +211,7 @@ const searchByName = (req, response) => {
 };
 
 /**
+ * Controller to find the Average age between all Users
  * @param {ignoredReq} - Useless Request from Express, not Used so ignored
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -218,6 +227,7 @@ const averageAge = (_, response) => {
 };
 
 /**
+ * Controller to Sort Users by Age or Name (in ASC or DESC)
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing
@@ -247,6 +257,7 @@ const sort = (req, response) => {
 };
 
 /**
+ * Controller to find all Users who's E-mail domain correspond to the Query
  * @param {Req} - Request from Express by POSTMAN (Rest API)
  * @param {Res} - Response to the Express Server or POSTMAN
  * @returns {Pvoid} - Returns Nothing Domain = Domain of an E-mail
@@ -275,6 +286,7 @@ const domain = (req, response) => {
 
 // #region NOT EXISTING PAGES & EXPORTS --------------------------------------
 /**
+ * Error Message if the Route doesn't exist (the Opposite of the welcome page)
  * @param {Req} - Request from Express by POSTMAN (Rest API) - Gets the URL for the Error message
  * @param {Res} - Response to the Express Server or POSTMAN - Shows the Error message, of Page not found
  * @returns {Pvoid} - Returns Nothing

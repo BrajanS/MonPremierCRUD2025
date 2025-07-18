@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/users/user.service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/users/user.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import UserRepository from "./repository/user.repository.js";
+
+/**
+ * @typedef {Promise&lt;Array&lt;Object>>} POA - A promise about an array of objects (Promise&lt;Array&lt;Object>>)
+ * @typedef {Promise&lt;Object|null>} POn - A promise of an Object of the User or Null (Promise&lt;Object|null>)
+ * @typedef {Promise&lt;Object>} PO - A promise of an Object (Promise&lt;Object>)
+ */
+
+// #region CLASSIC
+/**
+ * Service to get ALL Users
+ * @function
+ * @returns {POA} A promise about an array of User objects.
+ */
+const usersService = async () => {
+  return await new UserRepository().getUsers();
+};
+
+/**
+ * Service to get User by ID
+ * @function
+ * @param {string} userID - ObjectId of the User
+ * @returns {POA} A promise about an array of User objects.
+ */
+const targetUser = async (userID) => {
+  return await new UserRepository().user(userID);
+};
+
+/**
+ * Service to create a new User
+ * @function
+ * @param {Object} reqBody - JSON body containing the new user data.
+ * @returns {PO} A promise of an Object of the Created User
+ */
+const postUserService = async (reqBody) => {
+  return await new UserRepository().makeUser(reqBody);
+};
+
+/**
+ * Service to Update User (from ID)
+ * @function
+ * @param {string} id - ObjectId of the User
+ * @param {Object} updateData - Update Data JSON
+ * @returns {POn} A promise of an Object of the User or Null
+ */
+const updateUserService = async (id, updateData) => {
+  return await new UserRepository().updateById(id, updateData);
+};
+
+/**
+ * Service to delete a user by ID.
+ * @function
+ * @param {string} deleteId - ObjectId of the User to Delete
+ * @returns {POn} A promise of an Object of the User or Null
+ */
+const deleteUserService = async (deleteId) => {
+  return await new UserRepository().begoneUser(deleteId);
+};
+
+// #endregion CLASSIC
+
+// #region FILTERS
+
+/**
+ * Service to get the youngest User
+ * @function
+ * @returns {POA} A promise about an array of User objects.
+ */
+const youngestUserService = async () => {
+  return await new UserRepository().kidUser();
+};
+
+// #endregion FILTERS
+
+export {
+  usersService,
+  targetUser,
+  postUserService,
+  updateUserService,
+  deleteUserService,
+  youngestUserService,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="UserRepository%250D_%2520Class%2520for%2520User%2520manipulationsmodule_.html">UserRepository: Class for User manipulations</a></li><li><a href="productsController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Products%2520routesmodule_.html">productsController: All the Controllers that verify each Products routes</a></li><li><a href="productsModel%250D_%2520Mongoose%2520wanted%2520Products%2520modelmodule_.html">productsModel: Mongoose wanted Products model</a></li><li><a href="purchasesController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520Purchases%2520routesmodule_.html">purchasesController: All the Controllers that verify each Purchases routes</a></li><li><a href="purchasesModel%250D_%2520Mongoose%2520wanted%2520Purchases%2520modelmodule_.html">purchasesModel: Mongoose wanted Purchases model</a></li><li><a href="router%250D_%2520This%2520place%2520Handles%2520all%2520Routes%2520for%2520all%2520Controllersmodule_.html">router: This place Handles all Routes for all Controllers</a></li><li><a href="userController%250D_%2520All%2520the%2520Controllers%2520that%2520verify%2520each%2520User%2520routesmodule_.html">userController: All the Controllers that verify each User routes</a></li><li><a href="usersModel%250D_%2520Mongoose%2520wanted%2520Users%2520modelmodule_.html">usersModel: Mongoose wanted Users model</a></li></ul><h3>Global</h3><ul><li><a href="global.html#deleteUserService">deleteUserService</a></li><li><a href="global.html#port">port</a></li><li><a href="global.html#postUserService">postUserService</a></li><li><a href="global.html#targetUser">targetUser</a></li><li><a href="global.html#updateUserService">updateUserService</a></li><li><a href="global.html#usersService">usersService</a></li><li><a href="global.html#youngestUserService">youngestUserService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jul 18 2025 16:58:18 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

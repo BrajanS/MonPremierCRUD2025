@@ -7,6 +7,10 @@ import UsersModel from "./usersModel.js";
  * @typedef {Promise<Array<Object>>} POA - A promise about an array of objects (Promise<Array<Object>>)
  * @typedef {Promise<Object|null>} POn - A promise of an Object of the User or Null (Promise<Object|null>)
  * @typedef {Promise<Object>} PO - A promise of an Object (Promise<Object>)
+ *
+ * @module UserRepository
+ * : Class for User manipulations
+ *
  */
 export default class UserRepository {
   // #region CLASSIC ---------------

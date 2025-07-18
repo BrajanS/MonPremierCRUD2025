@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+/**
+ * @module purchasesModel
+ * : Mongoose wanted Purchases model
+ */
 const PurchasesStructure = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, required: true },
   productId: { type: mongoose.Schema.Types.ObjectId, required: true },
