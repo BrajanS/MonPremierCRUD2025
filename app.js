@@ -3,10 +3,12 @@ import express from "express";
 import { router } from "./routes/router.js";
 import connectMongoDb from "./database/connectDb.js";
 
-/** @type {import("express").Express} */
 const app = express();
 
-/** @type {Number} */
+/**
+ * Port number for the Express Server
+ * @type {Number}
+ */
 const port = process.env.expressPort;
 
 app.use(express.json());

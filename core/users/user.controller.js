@@ -12,21 +12,26 @@ import {
 } from "./user.service.js";
 /**
  * @module userController
- * All the Controllers that verify each User routes
+ * : All the Controllers that verify each User routes
  */
 
 /**
- * @typedef {import("express").Request} Req -> Request from Express
- * @typedef {import("express").Response} Res -> Request from Express
- * @typedef {Promise<void>} Pvoid -> Promise without Returns to Caller
- * @typedef {import("express").Request} ignoredReq -> Ignored ("_" -> Not used) Request from Express
- * @typedef {import("express").Response} ignoredRes -> Ignored ("_" -> Not used) Response from Express
+ * -> Request from Express
+ * @typedef {Object} Req
+ * -> Request from Express
+ * @typedef {Object} Res
+ * -> Promise without Returns to Caller
+ * @typedef {Promise<void>} Pvoid
+ * -> Ignored ("_" -> Not used) Request from Express
+ * @typedef {Object} ignoredReq
+ * -> Ignored ("_" -> Not used) Response from Express
+ * @typedef {Object} ignoredRes
  */
 
 /**
- * @param {ignoredReq}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const root = (_, response) => {
   response.send(`
@@ -53,9 +58,9 @@ const root = (_, response) => {
 
 // #region REGULAR USER CALLBACKS-------------
 /**
- * @param {ignoredReq}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const getUsers = async (_, response) => {
   try {
@@ -66,9 +71,9 @@ const getUsers = async (_, response) => {
   }
 };
 /**
- * @param {Req}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const getUser = async (req, response) => {
   try {
@@ -85,9 +90,9 @@ const getUser = async (req, response) => {
   }
 };
 /**
- * @param {Req}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const postUser = async (req, response) => {
   try {
@@ -101,9 +106,9 @@ const postUser = async (req, response) => {
   }
 };
 /**
- * @param {Req}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const putUser = async (req, response) => {
   try {
@@ -125,9 +130,9 @@ const putUser = async (req, response) => {
   }
 };
 /**
- * @param {Req}
- * @param {Res}
- * @returns {Pvoid}
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
  */
 const deleteUser = async (req, response) => {
   try {
@@ -152,6 +157,11 @@ const deleteUser = async (req, response) => {
 // #endregion REGULAR USER CALLBACKS----------
 
 // #region ADVANCED USER FILTER CALLBACKS-----
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const youngestUser = async (_, response) => {
   try {
     let usersArray;
@@ -170,6 +180,11 @@ const youngestUser = async (_, response) => {
   }
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const searchByName = (req, response) => {
   const name = req.query.name;
   if (name !== undefined) {
@@ -187,6 +202,11 @@ const searchByName = (req, response) => {
   }
 };
 
+/**
+ * @param {ignoredReq} - Useless Request from Express, not Used so ignored
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const averageAge = (_, response) => {
   let ageAddition = 0;
   users.forEach((user) => {
@@ -197,6 +217,11 @@ const averageAge = (_, response) => {
   response.status(200).send(`Average Age: ${sum} years`);
 };
 
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing
+ */
 const sort = (req, response) => {
   const sortBy = req.body.sortBy;
   const reverse = req.body.reverse;
@@ -221,7 +246,11 @@ const sort = (req, response) => {
   }
 };
 
-// Domain = Domain of an E-mail
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API)
+ * @param {Res} - Response to the Express Server or POSTMAN
+ * @returns {Pvoid} - Returns Nothing Domain = Domain of an E-mail
+ */
 const domain = (req, response) => {
   const domainSearch = req.params.domain;
   const wantedDomainUsers = users.filter((user) => {
@@ -245,6 +274,12 @@ const domain = (req, response) => {
 // #endregion ADVANCED USER FILTER CALLBACKS--
 
 // #region NOT EXISTING PAGES & EXPORTS --------------------------------------
+/**
+ * @param {Req} - Request from Express by POSTMAN (Rest API) - Gets the URL for the Error message
+ * @param {Res} - Response to the Express Server or POSTMAN - Shows the Error message, of Page not found
+ * @returns {Pvoid} - Returns Nothing
+ * Handles the Error message when the Route doesn't exist
+ */
 const notFound = (req, response) => {
   const statusCode = 404;
   response.status(statusCode).send(
