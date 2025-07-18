@@ -3,6 +3,13 @@ import users from "../../sample_data/users.js";
 import products from "../../sample_data/products.js";
 import purchasesData from "../../sample_data/purchases.js";
 import UsersModel from "./repository/usersModel.js";
+import {
+  usersService,
+  targetUser,
+  updateUserService,
+  postUserService,
+  deleteUserService,
+} from "./user.service.js";
 
 const root = (_, response) => {
   response.send(`
@@ -30,7 +37,7 @@ const root = (_, response) => {
 // #region REGULAR USER CALLBACKS-------------
 const getUsers = async (_, response) => {
   try {
-    const allUsers = await UsersModel.find({});
+    const allUsers = await usersService();
     response.status(200).send(allUsers);
   } catch (err) {
     response.status(500).json(err);
@@ -43,12 +50,8 @@ const getUser = async (req, response) => {
     if (params.toLowerCase().split("").length < 24) {
       response.status(400).send("The ID must be a Hex string of 24 characters");
     } else {
-      const foundUser = await UsersModel.find({ _id: params });
-      if (foundUser.length !== 0) {
-        response.status(200).json(foundUser);
-      } else {
-        response.status(404).send("Couldn't find the User by that _id");
-      }
+      const foundUser = await targetUser(params);
+      response.status(200).json(foundUser);
     }
   } catch (error) {
     console.error(error);
@@ -59,8 +62,7 @@ const getUser = async (req, response) => {
 const postUser = async (req, response) => {
   try {
     const requestedUser = req.body;
-    users.push(requestedUser);
-    const newUser = await UsersModel.create(requestedUser);
+    const newUser = await postUserService(requestedUser);
     console.info("New user:", newUser);
     response.status(200).json(newUser);
   } catch (error) {
@@ -76,10 +78,7 @@ const putUser = async (req, response) => {
     if (paramsID.toLowerCase().split("").length < 24) {
       response.status(400).send("The ID must be a Hex string of 24 characters");
     } else {
-      const userToChange = await UsersModel.findByIdAndUpdate(
-        paramsID,
-        reqUserChange
-      );
+      const userToChange = await updateUserService(paramsID, reqUserChange);
       if (userToChange) {
         response.status(200).json(userToChange);
       } else {
@@ -98,7 +97,7 @@ const deleteUser = async (req, response) => {
     if (deleteParams.toLowerCase().split("").length < 24) {
       response.status(400).send("The ID must be a Hex string of 24 characters");
     } else {
-      const userToDelete = await UsersModel.findByIdAndDelete(deleteParams);
+      const userToDelete = await deleteUserService(deleteParams);
       if (userToDelete !== null) {
         response.status(200).send(`DELETED USER: ${deleteParams}`);
       } else {
