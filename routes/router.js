@@ -27,6 +27,7 @@ import {
   purchases,
   userPurchases,
 } from "../core/purchases/purchase.controller.js";
+import logger from "../middleware/middlewareTest.js";
 // #endregion IMPORTS
 
 /**
@@ -39,7 +40,7 @@ const router = express.Router();
 router.get("/", root);
 
 // #region USER ROUTES -------------------
-router.get("/users", getUsers);
+router.get("/users", logger, getUsers);
 router.get("/users/:id", getUser);
 
 router.post("/users", postUser);
