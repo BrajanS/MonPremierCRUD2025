@@ -19,6 +19,7 @@
   },
   "description": "",
   "devDependencies": {
-    "jsdoc": "^4.0.4"
+    "jsdoc": "^4.0.4",
+    "mysql2": "^3.14.2"
   }
 }

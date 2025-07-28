@@ -1,20 +1,6 @@
 // #region IMPORTS
 import express from "express";
 import {
-  root,
-  notFound,
-  getUsers,
-  getUser,
-  postUser,
-  putUser,
-  deleteUser,
-  youngestUser,
-  sort,
-  searchByName,
-  averageAge,
-  domain,
-} from "../core/users/user.controller.js";
-import {
   deleteProduct,
   getProduct,
   getProducts,
@@ -27,55 +13,60 @@ import {
   purchases,
   userPurchases,
 } from "../core/purchases/purchase.controller.js";
-import logger from "../middleware/middlewareTest.js";
+import { logger, readJson } from "../middleware/middlewareTest.js";
 // #endregion IMPORTS
 
 /**
- * @module router
+ * @module routes
  * : This place Handles all Routes for all Controllers
  */
+function routes(userController) {
+  const router = express.Router();
 
-const router = express.Router();
+  router.get("/", (req, res) => userController.root(req, res));
 
-router.get("/", root);
+  // #region USER ROUTES -------------------
+  router.get("/users", logger, (req, res) => userController.getUsers(req, res));
+  router.get("/users/:id", (req, res) => userController.getUser(req, res));
 
-// #region USER ROUTES -------------------
-router.get("/users", logger, getUsers);
-router.get("/users/:id", getUser);
+  // prettier-ignore
+  router.post("/users", readJson, (req, res) => userController.postUser(req, res));
+  router.put("/users/:id", (req, res) => userController.putUser(req, res));
+  // prettier-ignore
+  router.delete("/users/:id", (req, res) => userController.deleteUser(req, res)
+  );
 
-router.post("/users", postUser);
-router.put("/users/:id", putUser);
-router.delete("/users/:id", deleteUser);
+  // USER FILTERS ROUTES
 
-// USER FILTERS ROUTES
+  router.get("/youngest", (req, res) => userController.youngestUser(req, res));
+  router.get("/search", (req, res) => userController.searchByName(req, res));
+  router.get("/average-age", (req, res) => userController.averageAge(req, res));
+  router.get("/domain/:domain", (req, res) => userController.domain(req, res));
 
-router.get("/youngest", youngestUser);
-router.get("/search", searchByName);
-router.get("/average-age", averageAge);
-router.get("/domain/:domain", domain);
+  router.post("/sort", (req, res) => userController.sort(req, res));
 
-router.post("/sort", sort);
+  // #endregion USER ROUTES ----------------
 
-// #endregion USER ROUTES ----------------
+  // #region PRODUCT ROUTES ----------------
+  router.get("/products", getProducts);
+  router.get("/products/:id", getProduct);
 
-// #region PRODUCT ROUTES ----------------
-router.get("/products", getProducts);
-router.get("/products/:id", getProduct);
+  router.post("/products", postProduct);
+  router.put("/products/:id", putProduct);
+  router.delete("/products/:id", deleteProduct);
+  // #endregion PRODUCT ROUTES -------------
 
-router.post("/products", postProduct);
-router.put("/products/:id", putProduct);
-router.delete("/products/:id", deleteProduct);
-// #endregion PRODUCT ROUTES -------------
+  // #region PURCHASES ROUTES --------------
+  router.get("/purchases", purchases);
+  router.post("/purchase", purchase);
 
-// #region PURCHASES ROUTES --------------
-router.get("/purchases", purchases);
-router.post("/purchase", purchase);
+  router.get("/users/:id/purchases", userPurchases);
+  router.get("/products/:id/buyers", productBuyers);
+  // #endregion PURCHASES ROUTES -----------
 
-router.get("/users/:id/purchases", userPurchases);
-router.get("/products/:id/buyers", productBuyers);
-// #endregion PURCHASES ROUTES -----------
+  // Express 5 doc changed from "/*" to -> "/*Any-Name" for Page not found, else it thinks "*" is a PARAMS
+  router.get("/*notfound", (req, res) => userController.notFound(req, res));
+  return router;
+}
 
-// Express 5 doc changed from "/*" to -> "/*Any-Name" for Page not found, else it thinks "*" is a PARAMS
-router.get("/*notfound", notFound);
-
-export { router };
+export default routes;

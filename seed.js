@@ -1,6 +1,6 @@
 // #region IMPORTS
 import "dotenv/config";
-import connectMongoDb from "./database/connectDb.js"; // adjust if path differs
+import connectDb from "./database/connectDb.js"; // adjust if path differs
 import UsersModel from "./core/users/repository/usersModel.js";
 import ProductsModel from "./core/products/repository/productsModel.js";
 import PurchasesModel from "./core/purchases/repository/purchasesModel.js";
@@ -22,7 +22,7 @@ const productsBase = [
 
 async function seedGenerate() {
   try {
-    await connectMongoDb();
+    await connectDb();
 
     await UsersModel.deleteMany({});
     await ProductsModel.deleteMany({});

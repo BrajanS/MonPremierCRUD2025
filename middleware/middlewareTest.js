@@ -1,6 +1,11 @@
 function logger(req, res, next) {
-  console.log("Middleware Logger:", req, res);
+  console.info("Middleware:", req.path);
   next();
 }
 
-export default logger;
+function readJson(req, res, next) {
+  console.info("Middleware:", req.body);
+  next();
+}
+
+export { logger, readJson };
