@@ -46,7 +46,7 @@ function routes(userController) {
   router.post("/sort", (req, res) => userController.sort(req, res));
 
   // #endregion USER ROUTES ----------------
-
+  /*
   // #region PRODUCT ROUTES ----------------
   router.get("/products", getProducts);
   router.get("/products/:id", getProduct);
@@ -63,7 +63,7 @@ function routes(userController) {
   router.get("/users/:id/purchases", userPurchases);
   router.get("/products/:id/buyers", productBuyers);
   // #endregion PURCHASES ROUTES -----------
-
+  */
   // Express 5 doc changed from "/*" to -> "/*Any-Name" for Page not found, else it thinks "*" is a PARAMS
   router.get("/*notfound", (req, res) => userController.notFound(req, res));
   return router;

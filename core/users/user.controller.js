@@ -77,13 +77,18 @@ class UserController {
   async getUser(req, response) {
     try {
       const params = req.params.id;
-      if (params.toLowerCase().split("").length < 24) {
-        response
-          .status(400)
-          .send("The ID must be a Hex string of 24 characters");
-      } else {
+      if (process.env.TYPE_DB === "mariadb") {
         const foundUser = await this.userService.targetUser(params);
         response.status(200).json(foundUser);
+      } else {
+        if (params.toLowerCase().split("").length < 24) {
+          response
+            .status(400)
+            .send("The ID must be a Hex string of 24 characters");
+        } else {
+          const foundUser = await this.userService.targetUser(params);
+          response.status(200).json(foundUser);
+        }
       }
     } catch (error) {
       console.error(error);
