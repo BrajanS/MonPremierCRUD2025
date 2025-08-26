@@ -1,3 +1,4 @@
+import DatabaseException from "../../../exceptions/database.exception.js";
 import UsersModel from "./usersModel.js";
 
 /**
@@ -36,7 +37,9 @@ export default class UserRepository {
    */
   async user(paramsID) {
     try {
-      const foundUser = await UsersModel.find({ _id: paramsID });
+      const foundUser = await UsersModel.find({
+        _id: paramsID,
+      });
       if (foundUser.length !== 0) {
         console.info("Found the User");
         return foundUser;
@@ -44,7 +47,7 @@ export default class UserRepository {
         console.error("Couldn't find the User by that _id");
       }
     } catch (err) {
-      throw new Error(err.message);
+      throw new DatabaseException(err);
     }
   }
 

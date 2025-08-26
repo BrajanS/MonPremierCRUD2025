@@ -6,8 +6,9 @@ import getPool from "./database/mariadb_pool.js";
 import UserController from "./core/users/user.controller.js";
 import UserService from "./core/users/user.service.js";
 
-import UserRepository from "./core/users/repository/user.mariadb.repository.js";
-// import UserRepository from "./core/users/repository/user.mongodb.repository.js";
+// import UserRepository from "./core/users/repository/user.mariadb.repository.js";
+import UserRepository from "./core/users/repository/user.mongodb.repository.js";
+import { errorHandler } from "./middleware/middlewareTest.js";
 
 const app = express();
 
@@ -24,11 +25,13 @@ const userRepository =
   process.env.TYPE_DB === "mariadb"
     ? new UserRepository(pool)
     : new UserRepository();
+
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
 app.use("", routes(userController));
 
+app.use(errorHandler);
 /**
  * Starts the Express server.
  * @function

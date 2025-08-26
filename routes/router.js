@@ -26,24 +26,38 @@ function routes(userController) {
   router.get("/", (req, res) => userController.root(req, res));
 
   // #region USER ROUTES -------------------
-  router.get("/users", logger, (req, res) => userController.getUsers(req, res));
-  router.get("/users/:id", (req, res) => userController.getUser(req, res));
+  router.get("/users", logger, (req, res, next) =>
+    userController.getUsers(req, res, next)
+  );
+  router.get("/users/:id", (req, res, next) =>
+    userController.getUser(req, res, next)
+  );
 
   // prettier-ignore
-  router.post("/users", readJson, (req, res) => userController.postUser(req, res));
-  router.put("/users/:id", (req, res) => userController.putUser(req, res));
+  router.post("/users", readJson, (req, res, next) => userController.postUser(req, res, next));
+  router.put("/users/:id", (req, res, next) =>
+    userController.putUser(req, res, next)
+  );
   // prettier-ignore
-  router.delete("/users/:id", (req, res) => userController.deleteUser(req, res)
+  router.delete("/users/:id", (req, res, next) => userController.deleteUser(req, res, next)
   );
 
   // USER FILTERS ROUTES
 
-  router.get("/youngest", (req, res) => userController.youngestUser(req, res));
-  router.get("/search", (req, res) => userController.searchByName(req, res));
-  router.get("/average-age", (req, res) => userController.averageAge(req, res));
-  router.get("/domain/:domain", (req, res) => userController.domain(req, res));
+  router.get("/youngest", (req, res, next) =>
+    userController.youngestUser(req, res, next)
+  );
+  router.get("/search", (req, res, next) =>
+    userController.searchByName(req, res, next)
+  );
+  router.get("/average-age", (req, res, next) =>
+    userController.averageAge(req, res, next)
+  );
+  router.get("/domain/:domain", (req, res, next) =>
+    userController.domain(req, res, next)
+  );
 
-  router.post("/sort", (req, res) => userController.sort(req, res));
+  router.post("/sort", (req, res, next) => userController.sort(req, res, next));
 
   // #endregion USER ROUTES ----------------
   /*

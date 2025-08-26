@@ -60,12 +60,12 @@ class UserController {
    * @param {Res} - Response to the Express Server or POSTMAN
    * @returns {Pvoid} - Returns Nothing
    */
-  async getUsers(_, response) {
+  async getUsers(_, response, next) {
     try {
       const allUsers = await this.userService.usersService();
       response.status(200).send(allUsers);
     } catch (err) {
-      response.status(500).json(err);
+      next(err);
     }
   }
   /**
@@ -74,7 +74,7 @@ class UserController {
    * @param {Res} - Response to the Express Server or POSTMAN
    * @returns {Pvoid} - Returns Nothing
    */
-  async getUser(req, response) {
+  async getUser(req, response, next) {
     try {
       const params = req.params.id;
       if (process.env.TYPE_DB === "mariadb") {
@@ -91,8 +91,7 @@ class UserController {
         }
       }
     } catch (error) {
-      console.error(error);
-      response.status(500).json(error);
+      next(error);
     }
   }
   /**
@@ -138,8 +137,7 @@ class UserController {
         }
       }
     } catch (error) {
-      console.error(error);
-      response.status(500).json(error);
+      next(error);
     }
   }
   /**

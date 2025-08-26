@@ -1,3 +1,4 @@
+import "dotenv/config";
 import mariadb from "mysql2/promise";
 
 const getPool = async () => {
